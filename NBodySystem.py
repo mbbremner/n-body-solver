@@ -22,7 +22,8 @@ from scipy.spatial import distance_matrix
 from itertools import combinations as cmb
 import pandas as pd
 import copy
-import helperFunctions as hf
+import io
+import os
 
 nd = {
     'm': 1.989e+30,  # kg, mass of the sun
@@ -31,8 +32,9 @@ nd = {
     't': 79.91 * 365 * 24 * 3600 * 0.51  # orbital period of Alpha Centauri
 }
 
+import helperFunctions as hf
 
-# ----------< Classes >---------
+# -----------< Classes >----------
 class NBodySystem:
 
     def __init__(self, bodies, nd_units, t_step, periods):
@@ -53,14 +55,18 @@ class NBodySystem:
 
         self.n_bodies = len(self.bodies)
         self.body_indexes = np.arange(0, self.n_bodies)
+        self.com = None                                         # System center of mass, to be computed from solutions
+
+
 
     def execute(self):
         " Solve and update the bodies with the solutions"
+        print('\tΔt = %f s' % self.delta_t)
         r_sol, v_sol = self.solve()
         self.update_bodies(r_sol, v_sol, self.time_steps)
         return
 
-    # @hf.calculate_time
+    @hf.calculate_time
     def solve(self):
         """
         :param time_span: lin-space of time slices
@@ -87,7 +93,7 @@ class NBodySystem:
         for i1 in self.body_indexes:
             # Calculate components for body i1 and sum as vectors rel. to each body (i2 bodies)
             other_bodies = (i for i in self.body_indexes if i != i1)
-            self.dvdt.append(sum([calc_dvdt_component(self.K1, r_in[i1], r_in[i2], self.bodies[i2].m) for i2 in tuple(other_bodies)]))
+            self.dvdt.append(sum([calc_dvdt_component(self.K1, r_in[i2] - r_in[i1], self.bodies[i2].m) for i2 in tuple(other_bodies)]))
 
         # Return concatenated derivatives
         return np.concatenate([self.drdt,  np.array(self.dvdt).flatten()])
@@ -105,10 +111,21 @@ class NBodySystem:
         for body in self.bodies:
             body.reset()
 
-    def save_solutions(self, save=False, tag=None):
+    @hf.calculate_time
+    def save_solutions(self, save=False, dir_='', tag=None):
         if save:
             for body in self.bodies:
-                body.save_solution(tag)
+                body.save_solution(tag=tag, dir_=dir_)
+
+    def compute_center_of_mass(self):
+        masses = [b.m for b in self.bodies]
+        r_sol = [list(b.r_sol.values()) for b in self.bodies]
+        self.com = [[compute_com(r, masses) for r in list(zip(*soln))] for soln in list(zip(*r_sol))]
+
+    def compute_relative_positions(self):
+        for body in self.bodies:
+            body.r_com = np.array(list(body.r_sol.values())) - np.array(self.com)
+
 
     def __repr__(self):
         return str(self.n_bodies) + ' ' + str(self.delta_t) + '\t' + ', '.join([b.name for b in self.bodies])
@@ -127,6 +144,8 @@ class GalacticBody:
 
         self.r_sol = {'x': [], 'y': [], 'z': []}
         self.v_sol = {'x': [], 'y': [], 'z': []}
+
+        self.r_com = {'x': [], 'y': [], 'z': []}
 
         self.t = []
 
@@ -158,39 +177,51 @@ class NamedBody(GalacticBody):
     def __repr__(self):
         return '\t'.join((self.name, super(NamedBody, self).__repr__()))
 
-    def save_solution(self, tag=None):
+    def save_solution(self, tag=None, dir_=''):
+
+        """
+
+        :param tag: name of experiment (ex: tag = '-50-1000' if  50 periods 1000 pts per period)
+        :return:
+        """
         if tag == None:
             tag = ''
 
+        d = {}
+        d.update(self.r_sol)
+        d['t'] = self.t
+        d['norm'] = [np.linalg.norm(item) for item in list(zip(*(self.r_sol.values())))]
+        p = os.path.join(dir_, self.name + '-r_sol' + tag + '.csv')
+        hf.saveTupleList([tuple(d.keys())] + list(zip(*d.values())), p)
 
+        d.update(self.v_sol)
+        d['t'] = self.t
+        d['norm'] = [np.linalg.norm(item) for item in list(zip(*(self.v_sol.values())))]
+        p = os.path.join(dir_, self.name + '-v_sol' + tag + '.csv')
+        hf.saveTupleList([tuple(d.keys())] + list(zip(*d.values())), p)
+
+    def save_solution_df(self, tag=None):
+        """
+        Use pandas dataframes to compute norm and save to csv
+        *note: this is much slower than the method save_solution, mostly because
+        df.apply is much slower than working directly on the values
+        :param tag:
+        :return:
+        """
+        if tag == None:
+            tag = ''
         df = pd.DataFrame(self.r_sol)
         df['t'] = self.t
-        # print('wtf')
-        # print('wtf')
-        # df['norm'] = df['x', 'y', 'z'].apply(np.linalg.norm)
+
         df['norm'] = df.apply(lambda row: np.linalg.norm((row['x'], row['y'], row['z'])), axis=1)
         df.to_csv('results//' + self.name + '-r_sol-' + tag + '.csv', index=False)
         df = pd.DataFrame(self.v_sol)
         df['t'] = self.t
-        # df['norm'] = df[['x', 'y', 'z']].apply(np.linalg.norm)
         df['norm'] = df.apply(lambda row: np.linalg.norm((row['x'], row['y'], row['z'])), axis=1)
         df.to_csv('results//' + self.name + '-v_sol'  + tag +  '.csv', index=False)
 
 
-def UC_time_evaluation(body_list, nd_values):
-    # Example:
-    # 1. EVALUATE EXECUTION TIME >-----
-    # UC_time_evaluation([two_bodies, three_bodies, four_bodies, five_bodies], nd)
-    periods, steps_per_prd = 50, 200
-    timespan = np.linspace(0, periods - 1, periods * steps_per_prd)
-
-    for bodies in body_list:
-        print('\n%d Bodies, # of pts: %d' % (len(bodies), len(timespan)))
-        nbs = NBodySystem(bodies, nd_values)
-        nbs.execute(nbs, timespan)
-        nbs.reset_bodies()
-
-
+# ----------< Functions >---------
 def compute_com_pairs(bodies):
 
     com = {}
@@ -230,7 +261,7 @@ def compute_com(r_data, m_data):
     return sum([m * r for m, r in list(zip(r_data, m_data))]) / sum(m_data)
 
 
-def calc_dvdt_component(k1, r1, r2, m2):
+def calc_dvdt_component(k1, delta_r, m2):
     """
     Calculate a single component of dv/dt calculation on a gravitational body
     :param k1: constant K1 calculated from non-denominational units
@@ -239,34 +270,24 @@ def calc_dvdt_component(k1, r1, r2, m2):
     :param r2:
     :return: dvdt component between body1 and body2
     """
-    return k1 * m2 * (r2 - r1) / np.linalg.norm(r2-r1) ** 3
+    return k1 * m2 * delta_r / np.linalg.norm(delta_r) ** 3
 
 
 def unanimated_orbit_plot(ax, data_pos, data_com=None):
     """
-
-    :param r_a: x, y, z data for body A
-    :param r_b: x, y, z data for body B
+    :param ax: axis object to plot on
+    :param data_pos: x, y, z data for each body
     :param r_com: x, y, z data for Center of Mass
     :return:
     """
 
-    # Create 3D axes
-
-    # ax = fig.add_subplot(121, projection="3d")
-    # ax2 = fig.add_subplot(122)
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62727', '#282828', 'blue']
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62727', '#282828', 'blue', 'k']
 
     # Plot Lines
-
-
-
     for i, (name, soln) in enumerate(data_pos.items()):
-        print(soln)
         ax.plot(*soln, lw=2.1, linestyle='solid')
         ax.scatter(*[s[-1] for s in soln], marker="o", s=100, label=name)
         ax.scatter(*[s[0] for s in soln], color=colors[i],  marker="x", s=100)
-
 
     # Plot Center of Mass Data
     if data_com is not None:
@@ -296,11 +317,11 @@ def unanimated_orbit_plot(ax, data_pos, data_com=None):
     return ax
 
 
-def animate_solution(fig, data_pos, data_com):
+def animate_solution(data_pos, data_com):
 
     # Create 3D axes
-    # fig = plt.figure(figsize=(12, 9))
-    # fig.set_tight_layout({"pad": 1, "w_pad": 1, 'h_pad': 1})
+    fig = plt.figure(figsize=(12, 9))
+    fig.set_tight_layout({"pad": 1, "w_pad": 1, 'h_pad': 1})
     ax = fig.add_subplot(111, projection="3d")
     colors = ['#1f77b4', '#ff7f0e', '#2ca02c']
 
@@ -377,40 +398,107 @@ def animate_solution(fig, data_pos, data_com):
 
     plt.show()
 
+
+def EXAMPLE_pos_vel_plot(pos_data, vel_data, dt):
+    #. 2. Position Velocity Plot
+    fig = plt.figure(figsize=(14, 8))
+    fig.set_tight_layout({"pad": 1, "w_pad": 1, 'h_pad': 1})
+    fig.suptitle('Visualization of Two body System: delta-t: %4.4f' % dt)
+    ax1 = fig.add_subplot(121, projection="3d")
+    ax1 = unanimated_orbit_plot(ax1, pos_data, data_com = None)
+    ax2 = fig.add_subplot(122, projection="3d")
+    ax2 = unanimated_orbit_plot(ax2, vel_data, data_com=None)
+    ax1.set_title('Position relative to IRF')
+    ax2.set_title('Velocity relative to IRF')
+    plt.subplots_adjust(left=0.1, right=0.95, top=1, wspace=0.1, hspace=0.1)
+
+
+def EXAMPLE_compare_timesteps(pos_data, vel_data, timesteps):
+
+    # a. Position plots
+    fig = plt.figure(figsize=(14, 8))
+    fig.set_tight_layout({"pad": 1, "w_pad": 1, 'h_pad': 1})
+    fig.suptitle('Position of system at various time steps')
+    data = pos_data
+    ax1 = fig.add_subplot(121, projection="3d")
+    ax1 = unanimated_orbit_plot(ax1, data[0], data_com=None)
+    ax2 = fig.add_subplot(122, projection="3d")
+    ax2 = unanimated_orbit_plot(ax2, data[1], data_com=None)
+    ax1.set_title('Delta-t = %4.4f ' % timesteps[0])
+    ax2.set_title('Delta-t = %4.4f' % timesteps[1])
+
+    # b. Velocity Plots
+    fig2 = plt.figure(figsize=(14, 8))
+    fig2.set_tight_layout({"pad": 1, "w_pad": 1, 'h_pad': 1})
+    fig2.suptitle('Velocity of system at various time steps')
+    data = vel_data
+    ax3 = fig2.add_subplot(121, projection="3d")
+    ax3 = unanimated_orbit_plot(ax3, data[0], data_com=None)
+    ax4 = fig2.add_subplot(122, projection="3d")
+    ax4 = unanimated_orbit_plot(ax4, data[1], data_com=None)
+    ax3.set_title('Delta-t = %f ' % timesteps[0])
+    ax4.set_title('Delta-t = %f' % timesteps[1])
+    plt.subplots_adjust(left=0.1, right=0.95, wspace=0.1, hspace=0.1)
+
+
+def EXAMPLE_single_plot(data):
+    #. 2. Position Velocity Plot
+    fig = plt.figure(figsize=(14, 8))
+    fig.set_tight_layout({"pad": 1, "w_pad": 1, 'h_pad': 1})
+    ax1 = fig.add_subplot(111, projection="3d")
+    ax1 = unanimated_orbit_plot(ax1, data, data_com=None)
+
+
 def main():
 
     # Initialize Bodies
     alpha_centauri_a = NamedBody('Alpha Centauri A', 1.1, np.array([-0.5, 0, 0], dtype="float64"), np.array([0.01, 0.01, 0], dtype="float64"))
     alpha_centauri_b = NamedBody('Alpha Centauri B', 0.907, np.array([0.5, 0, 0], dtype="float64"), np.array([-0.05, 0, -0.1], dtype="float64"))
-    body_c = NamedBody('Body C', 1.035, [0, 1, 0], [0, -0.01, 0])
+    body_c = NamedBody('Body C', 1.0, [0, 1, 0], [0, -0.01, 0])
 
     two_bodies = [alpha_centauri_a, alpha_centauri_b]
     three_bodies = two_bodies + [body_c]
 
-
-    input_bodies = two_bodies
-    p, timesteps = 20, [0.1, 0.01]
     # Initialize each system
+    input_bodies = two_bodies
+    p, timesteps = 50, [0.01, 0.1]
+
+    # Make an n-body-system for each time-step
     Systems = [NBodySystem(copy.deepcopy(input_bodies), nd, t_step=step, periods=p)  for step in timesteps]
-    # Solve each system
-    for system in Systems:
+
+
+    # Solve each system w/ optional saving
+    save_ = False
+    for i, system in enumerate(Systems):
+        print('%d. Solving' % i)
         system.execute()
-    # Each system has a set of bodies which store the solutions
-    position_data = [{b.name: list(b.r_sol.values()) for b in S.bodies} for S in Systems]
+        system.compute_center_of_mass()
+        system.compute_relative_positions()
+        print('\tSaving')
+        system.save_solutions(save=save_, dir_='results//two-body', tag='-' + str(len(system.bodies)) + '-' + str(p) + '-' + str(int(1/timesteps[i])))
+    print('Solving & Saving is complete')
+    # Extract data from each system
+    position_data = [{body.name: list(body.r_sol.values()) for body in S.bodies} for S in Systems]
+    velocity_data = [{body.name: list(body.v_sol.values()) for body in S.bodies} for S in Systems]
+    pos_relative_data = [{body.name: body.r_com for body in S.bodies} for S in Systems]
+    error_data = []
+
+
+    # 1. Plot a single set of solution data
+    # EXAMPLE_single_plot(pos_relative_data[0])
 
     # Plot the data
-    fig = plt.figure(figsize=(14, 8))
-    fig.set_tight_layout({"pad": 1, "w_pad": 1, 'h_pad': 1})
+    # 2. Animate one the solution
+    # animate_solution(data_pos=position_data[0], data_com=None)
 
-    # 1. Animate one the solution
-    animate_solution(fig, data_pos=position_data[1], data_com=None)
-    #
-    # 2. 3D plot several solutions on separate
-    # ax1 = fig.add_subplot(121, projection="3d")
-    # ax1 = unanimated_orbit_plot(ax1, position_data[0], data_com=None)
-    # ax1 = fig.add_subplot(122, projection="3d")
-    # ax2 = unanimated_orbit_plot(ax1, position_data[1], data_com=None)
+    # 3. Position velocity graph
+    # EXAMPLE_pos_vel_plot(position_data[0], velocity_data[0], timesteps[0])
+
+    # 4. Several Figures: Compare position and velocity for two distinct time_step values
+    # EXAMPLE_compare_timesteps(position_data, velocity_data, timesteps)
+
     plt.show()
+    print('Thank You')
     exit()
 
 
