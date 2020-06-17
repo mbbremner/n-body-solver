@@ -33,7 +33,7 @@
         system.save_solutions(save=save_, dir_='results//two-body', tag='-' + str(len(system.bodies)) + '-' + str(p) + '-' + str(int(1/timesteps[i])))
 	</pre></code>
 
-**4. Cxtract desired data to plot**
+**4. Extract desired data to plot**
 	<pre><code>position_data = [{body.name: list(body.r_sol.values()) for body in S.bodies} for S in Systems]
 	velocity_data = [{body.name: list(body.v_sol.values()) for body in S.bodies} for S in Systems]
 	pos_relative_data = [{body.name: body.r_com for body in S.bodies} for S in Systems]
@@ -44,7 +44,7 @@
 		- Note: position data is indexed as position_data[0] because there are > 1 systems in this example.  
 		- simple 3D plot of either position or velocity data (position used here)  
 		- accepts a dictionary of name: data pairs   
-		<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex1-nbody.png" alt="alt text" width="800" height="457"></p>
+		<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex1-nbody.png" alt="alt text" width="800" height="550"></p>
 	(2)	animate_solution(data_pos=position_data[0], data_com=None) <br/>
 		- accepts a dictionary of name: data pairs  
 		[Video of Animated Solution](https://www.youtube.com/watch?v=BxWohnyRdR8&feature=youtu.be)  
