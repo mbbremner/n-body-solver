@@ -9,7 +9,7 @@
  
 **2. Initialize number of periods and timesteps**
 
-   a. for a single system: 
+ a. for a single system: 
  <pre><code>p, step = 50, 0.01  
  System = NBodySystem(copy.deepcopy(input_bodies), nd, t_step=step, periods=p)  
  </pre></code>
