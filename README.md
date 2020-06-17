@@ -47,6 +47,7 @@
 		<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex1-nbody.png" alt="alt text" width="800" height="457"></p>
 	(2)	animate_solution(data_pos=position_data[0], data_com=None) <br/>
 		- accepts a dictionary of name: data pairs  
+		[Video of Animated Solution](https://www.youtube.com/watch?v=BxWohnyRdR8&feature=youtu.be)
 	(3) EXAMPLE_pos_vel_plot(position_data[0], velocity_data[0], timesteps[0])  
 		- A single figure for one N-Body-System with two plots: one for position and one for velocity of each body  
 		- accepts a dictionary of name: data pairs
