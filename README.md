@@ -47,11 +47,11 @@
 		<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex1-nbody.png" alt="alt text" width="800" height="457"></p>
 	(2)	animate_solution(data_pos=position_data[0], data_com=None) <br/>
 		- accepts a dictionary of name: data pairs  
-		[Video of Animated Solution](https://www.youtube.com/watch?v=BxWohnyRdR8&feature=youtu.be)
+		[Video of Animated Solution](https://www.youtube.com/watch?v=BxWohnyRdR8&feature=youtu.be)  
 	(3) EXAMPLE_pos_vel_plot(position_data[0], velocity_data[0], timesteps[0])  
 		- A single figure for one N-Body-System with two plots: one for position and one for velocity of each body  
 		- accepts a dictionary of name: data pairs
-		<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex3-nbody.png" alt="alt text" width="600" height="457"></p>
+		<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex3-nbody.png" alt="alt text" width="800" height="457"></p>
 	(4) EXAMPLE_compare_timesteps(position_data, velocity_data, timesteps)  
 		- When a system is solved for different timesteps, the solutions may be compared  
 		- accepts a dictionary of name: data pairs <br/>
