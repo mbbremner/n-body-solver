@@ -44,7 +44,7 @@
 		- Note: position data is indexed as position_data[0] because there are > 1 systems in this example.  
 		- simple 3D plot of either position or velocity data (position used here)  
 		- accepts a dictionary of name: data pairs   
-		<img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex1-nbody.png" alt="alt text" width="300" height="200">
+		<img align="middle" src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex1-nbody.png" alt="alt text" width="300" height="200">
 	(2)	animate_solution(data_pos=position_data[0], data_com=None) <br/>
 		- accepts a dictionary of name: data pairs  
 	(3) EXAMPLE_pos_vel_plot(position_data[0], velocity_data[0], timesteps[0])  
