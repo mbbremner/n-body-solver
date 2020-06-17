@@ -50,12 +50,12 @@
 	(3) EXAMPLE_pos_vel_plot(position_data[0], velocity_data[0], timesteps[0])  
 		- A single figure for one N-Body-System with two plots: one for position and one for velocity of each body  
 		- accepts a dictionary of name: data pairs
-		<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex3-nbody.png" alt="alt text" width="600" height="400"></p>
+		<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex3-nbody.png" alt="alt text" width="600" height="457"></p>
 	(4) EXAMPLE_compare_timesteps(position_data, velocity_data, timesteps)  
 		- When a system is solved for different timesteps, the solutions may be compared  
 		- accepts a dictionary of name: data pairs <br/>
-		<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex4-nbody-r.png" alt="alt text" width="600" height="400"></p>
-		<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex4-nbody-v.png" alt="alt text" width="600" height="400"></p>
+		<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex4-nbody-r.png" alt="alt text" width="800" height="457"></p>
+		<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex4-nbody-v.png" alt="alt text" width="800" height="457"></p>
 Don't forget plt.show, as it's not included in the examples.
 
 
