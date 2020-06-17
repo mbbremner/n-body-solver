@@ -1,6 +1,3 @@
-# n-body-solver
-Solve and visualize / animate an n-body gravitational system
-
 **1. Define some galactic body objects.Give them a name, mass, initial position, initial velocity**
 	<pre><code>alpha_centauri_a = NamedBody('Alpha Centauri A', m=1.1, r0=np.array([-0.5, 0, 0]), v0=np.array([0.01, 0.01, 0]))
 	alpha_centauri_b = NamedBody('Alpha Centauri B', m=0.907, r0=np.array([0.5, 0, 0]), v0=np.array([-0.05, 0, -0.1]))
@@ -47,6 +44,7 @@ Solve and visualize / animate an n-body gravitational system
 		- Note: position data is indexed as position_data[0] because there are > 1 systems in this example.  
 		- simple 3D plot of either position or velocity data (position used here)  
 		- accepts a dictionary of name: data pairs   
+		![Image of Yaktocat](https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex1-nbody.png)
 	(2)	animate_solution(data_pos=position_data[0], data_com=None) <br/>
 		- accepts a dictionary of name: data pairs  
 	(3) EXAMPLE_pos_vel_plot(position_data[0], velocity_data[0], timesteps[0])  
