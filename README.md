@@ -9,14 +9,14 @@
  
 **2. Initialize number of periods and timesteps**
 
- a. for a single system: 
- <pre><code>p, step = 50, 0.01  
- System = NBodySystem(copy.deepcopy(input_bodies), nd, t_step=step, periods=p)  
- </pre></code>
- b. For multiple systems:
- <pre><code>p, timesteps = 50, [0.01, 0.1]  
- Systems = [NBodySystem(copy.deepcopy(input_bodies), nd, t_step=step, periods=p)  for step in timesteps]  
- </pre></code>
+a. for a single system: 
+<pre><code>p, step = 50, 0.01  
+System = NBodySystem(copy.deepcopy(input_bodies), nd, t_step=step, periods=p)  
+</pre></code>
+b. For multiple systems:
+<pre><code>p, timesteps = 50, [0.01, 0.1]  
+Systems = [NBodySystem(copy.deepcopy(input_bodies), nd, t_step=step, periods=p)  for step in timesteps]  
+</pre></code>
 
 **3. Solve each system**  
 	The solve loop iterates over each system and applies the following: <br/><br/>
@@ -27,7 +27,7 @@
 	Example (Note this loop functions with 1 or more systems):
 	<pre><code>save_ = False
     for i, system in enumerate(Systems):
-	system.execute()
+		system.execute()
         system.compute_center_of_mass()
         system.compute_relative_positions()
         system.save_solutions(save=save_, dir_='results//two-body', tag='-' + str(len(system.bodies)) + '-' + str(p) + '-' + str(int(1/timesteps[i])))
@@ -58,3 +58,5 @@
 		<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex4-nbody-r.png" alt="alt text" width="800" height="457"></p>
 		<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex4-nbody-v.png" alt="alt text" width="800" height="457"></p>
 Don't forget plt.show, as it's not included in the examples.
+
+
