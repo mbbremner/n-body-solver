@@ -5,6 +5,10 @@ I have designed all of this code around a [Simple Example](https://towardsdatasc
 from Towards Data Science. The example I used lacked any sort of class structure and code to animate 3-body solutions. Additionally I've added features such as error inspection
 and generalized center of mass calculations.
 
+This code has been tested for systems of 2-5 bodies. Expect the exectution time to slow down for more bodies & shorter timesteps.
+
+<h2>How to Use</h2>
+
 **1. Define some galactic body objects** 
 <p>Give each body a name, mass, initial position, initial velocity</p>
 <pre><code>alpha_centauri_a = NamedBody('Alpha Centauri A', m=1.1, r0=np.array([-0.5, 0, 0]), v0=np.array([0.01, 0.01, 0]))
