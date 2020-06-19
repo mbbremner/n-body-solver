@@ -1,8 +1,9 @@
 <h1>Generalized N-Body Solver</h1>
-<p>This application is designed to solve an n-body gravitational system for two or more bodies.
-    I have designed all of this code around a [Simple Example](https://towardsdatascience.com/modelling-the-three-body-problem-in-classical-mechanics-using-python-9dc270ad7767)  
-    from Towards Data Science. The example I used lacked any sort of class structure and code to animate 3-body solutions. Additionally I've added features such as error inspection
-    and generalized center of mass calculations.</p>
+This application is designed to solve an n-body gravitational system for two or more bodies.
+I have designed all of this code around a 
+[Simple Example](https://towardsdatascience.com/modelling-the-three-body-problem-in-classical-mechanics-using-python-9dc270ad7767)  
+from Towards Data Science. The example I used lacked any sort of class structure and code to animate 3-body solutions. Additionally I've added features such as error inspection
+and generalized center of mass calculations.
 
 **1. Define some galactic body objects** 
 <p>Give each body a name, mass, initial position, initial velocity</p>
