@@ -69,7 +69,8 @@ The solutions are stored within each body within the n-body-system object. Data 
 
 &nbsp;*c. Visualize position & velocity data for a System on a single figure*
 <pre><code>EXAMPLE_pos_vel_plot(position_data[0], velocity_data[0], timesteps[0]))</code></pre>
-<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex3-nbody.png" alt="alt text" width="800" height="457"></p>
+<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex3-nbody.png" alt="alt text" width="800" height="457"></p>  
+
 &nbsp;*d. Compare position and velocity visually at two different time incriments*
 <pre><code>EXAMPLE_compare_timesteps(position_data, velocity_data, timesteps)</code></pre>
 <p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex4-nbody-r.png" alt="alt text" width="800" height="457"></p>
