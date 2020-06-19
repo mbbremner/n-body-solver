@@ -45,7 +45,8 @@ for i, system in enumerate(Systems):
 	system.save_solutions(save=save_, dir_='results//two-body', tag='-' + str(len(system.bodies)) + '-' + str(p) + '-' + str(int(1/timesteps[i])))
 </code></pre>
 
-**4. Extract desired data to plot**
+**4. Extract desired data to plot**  
+The solutions are stored within each body within the n-body-system object. Data may be extracted for plotting as so:
 	<pre><code>position_data = [{body.name: list(body.r_sol.values()) for body in S.bodies} for S in Systems]
 	velocity_data = [{body.name: list(body.v_sol.values()) for body in S.bodies} for S in Systems]
 	pos_relative_data = [{body.name: body.r_com for body in S.bodies} for S in Systems]
