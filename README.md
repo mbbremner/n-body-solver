@@ -49,21 +49,27 @@ for i, system in enumerate(Systems):
 
 **5. Visualize Solutions - Examples:**
 <p>Several examples are provided to demonstrate various use-cases</p>
-(1)	Plot position or velocity of a single system's solution
-<p>The example accepts of dict of {name: data} pairs where the data is the solution for the given body name</p>
+
+&nbsp;*a. Plot position or velocity of a single system's solution*
+&nbsp;<p>The example accepts of dict of {name: data} pairs where the data is the solution for the given body name</p>
 
 <pre><code>EXAMPLE_single_plot(position_data[0])</code></pre>
 
-<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex1-nbody.png" alt="alt text" width="800" height="550"></p>
-(2)	Animate the position or velocity of a single system
+<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex1-nbody.png" alt="alt text" width="800" height="550"></p> 
+
+&nbsp;*b. Animate the position or velocity of a single system*
 <pre><code>animate_solution(data_pos=position_data[0], data_com=None)</code></pre>
 
 [Video of Animated Solution](https://www.youtube.com/watch?v=BxWohnyRdR8&feature=youtu.be)  
-(3) Visualize position & velocity data for a System on a single figure
+
+&nbsp;*c. Visualize position & velocity data for a System on a single figure*
 <pre><code>EXAMPLE_pos_vel_plot(position_data[0], velocity_data[0], timesteps[0]))</code></pre>
 <p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex3-nbody.png" alt="alt text" width="800" height="457"></p>
-(4) Compare position and velocity visually at two different time incriments
+&nbsp;*d. Compare position and velocity visually at two different time incriments*
 <pre><code>EXAMPLE_compare_timesteps(position_data, velocity_data, timesteps)</code></pre>
 <p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex4-nbody-r.png" alt="alt text" width="800" height="457"></p>
 <p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex4-nbody-v.png" alt="alt text" width="800" height="457"></p>
+
+
+
 Don't forget plt.show(), as it's not included in the examples.
