@@ -57,6 +57,7 @@ for i, system in enumerate(Systems):
 <p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex1-nbody.png" alt="alt text" width="800" height="550"></p>
 (2)	Animate the position or velocity of a single system
 <pre><code>animate_solution(data_pos=position_data[0], data_com=None)</code></pre>
+
 [Video of Animated Solution](https://www.youtube.com/watch?v=BxWohnyRdR8&feature=youtu.be)  
 (3) Visualize position & velocity data for a System on a single figure
 <pre><code>EXAMPLE_pos_vel_plot(position_data[0], velocity_data[0], timesteps[0]))</code></pre>
