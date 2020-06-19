@@ -26,12 +26,12 @@
 		d. save_solutions( ... ) 		- save the position and velocity data to a csv file <br/><br/>
 	Example (Note this loop functions with 1 or more systems):
 	<pre><code>save_ = False
-	    for i, system in enumerate(Systems):
-		system.execute()
-		system.compute_center_of_mass()
-		system.compute_relative_positions()
-		system.save_solutions(save=save_, dir_='results//two-body', tag='-' + str(len(system.bodies)) + '-' + str(p) + '-' + str(int(1/timesteps[i])))
-		</pre></code>
+    for i, system in enumerate(Systems):
+	system.execute()
+        system.compute_center_of_mass()
+        system.compute_relative_positions()
+        system.save_solutions(save=save_, dir_='results//two-body', tag='-' + str(len(system.bodies)) + '-' + str(p) + '-' + str(int(1/timesteps[i])))
+	</pre></code>
 
 **4. Extract desired data to plot**
 	<pre><code>position_data = [{body.name: list(body.r_sol.values()) for body in S.bodies} for S in Systems]
@@ -58,5 +58,3 @@
 		<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex4-nbody-r.png" alt="alt text" width="800" height="457"></p>
 		<p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex4-nbody-v.png" alt="alt text" width="800" height="457"></p>
 Don't forget plt.show, as it's not included in the examples.
-
-
