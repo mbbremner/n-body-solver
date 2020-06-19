@@ -1,6 +1,7 @@
 <h1>Generalized N-Body Solver</h1>
 <p>This application is designed to solve an n-body gravitational system for two or more bodies.
-    I have designed all of this code around a simple example I found at (https://towardsdatascience.com/modelling-the-three-body-problem-in-classical-mechanics-using-python-9dc270ad7767).  The example I used lacked any sort of class structure and code to animate 3-body solutions. Additionally I've added features such as error inspection
+    I have designed all of this code around a [Simple Example](https://towardsdatascience.com/modelling-the-three-body-problem-in-classical-mechanics-using-python-9dc270ad7767)  
+    from Towards Data Science. The example I used lacked any sort of class structure and code to animate 3-body solutions. Additionally I've added features such as error inspection
     and generalized center of mass calculations.</p>
 
 **1. Define some galactic body objects** 
@@ -28,7 +29,7 @@ The solve loop iterates over each system and applies the following:
  - execute() 					- runs the ODE solve routine and updates the body objects with solutions
  - compute_center_of_mass() 	- computes the system CoM at each timestep from the solutions
  - compute_relative_positions() - computes the position of each body relative to the system CoM
- - save_solutions( ... ) 		- save the position and velocity data to a csv file <br/><br/>
+ - save_solutions( ... ) 		- save the position and velocity data to a csv file. Provide a directory and unique tag for each solution<br/><br/>
 
 Example (Note this loop functions with 1 or more systems):
 <pre><code>save_ = False
@@ -64,6 +65,4 @@ for i, system in enumerate(Systems):
 <pre><code>EXAMPLE_compare_timesteps(position_data, velocity_data, timesteps)</code></pre>
 <p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex4-nbody-r.png" alt="alt text" width="800" height="457"></p>
 <p align="center"><img src="https://github.com/mbbremner/n-body-solver/blob/master/docs/img/ex4-nbody-v.png" alt="alt text" width="800" height="457"></p>
-Don't forget plt.show, as it's not included in the examples.
-
-
+Don't forget plt.show(), as it's not included in the examples.
